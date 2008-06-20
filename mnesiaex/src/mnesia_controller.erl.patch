@@ -1,0 +1,53 @@
+--- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_controller.erl	2007-08-05 08:49:02.000000000 -0700
++++ ./mnesia_controller.erl	2008-06-11 03:08:58.000000000 -0700
+@@ -354,6 +354,8 @@
+ 	    do_force_load_table(Tab);
+ 	disc_only_copies ->
+ 	    do_force_load_table(Tab);
++        {external_copies, _} ->
++            do_force_load_table(Tab);        
+ 	unknown ->
+ 	    set({Tab, load_by_force}, true),
+ 	    cast({force_load_updated, Tab}),
+@@ -1474,8 +1476,12 @@
+ 	    if   %% Avoid reading from disc_only_copies
+ 		NodeST == disc_only_copies ->
+ 		    ignore;
++		NodeST == external_copies ->
++		    ignore;
+ 		ReadST == disc_only_copies ->
+ 		    mnesia_lib:set_remote_where_to_read(Tab);
++		ReadST == external_copies ->
++		    mnesia_lib:set_remote_where_to_read(Tab);
+ 		true ->
+ 		    ignore
+ 	    end,
+@@ -1524,6 +1530,7 @@
+     Ram = Cs#cstruct.ram_copies,
+     Disc = Cs#cstruct.disc_copies,
+     DiscOnly = Cs#cstruct.disc_only_copies,
++    Ext = Cs#cstruct.external_copies,
+     BetterCopies0 = mnesia_lib:remote_copy_holders(Cs) -- Downs,
+     BetterCopies = BetterCopies0 -- Ram,
+     AccessMode = Cs#cstruct.access_mode,
+@@ -1556,7 +1563,7 @@
+ 	    false;
+ 	Storage == ram_copies ->
+ 	    if
+-		Disc == [], DiscOnly == [] ->
++		Disc == [], DiscOnly == [], Ext == [] ->
+ 		    %% Nobody has copy on disc
+ 		    {true, {Tab, ram_only}};
+ 		true ->
+@@ -1788,6 +1795,11 @@
+ 			dets:info(Tab, size), 
+ 			dets:info(Tab, file_size),
+ 			"bytes on disc");
++        {external_copies, Mod} ->
++            info_format(Tab,
++                        Mod:info(Tab, size),
++                        Mod:info(Tab, memory),
++                        "words of mem");
+ 	_ ->
+ 	    info_format(Tab, 
+ 			?ets_info(Tab, size),
