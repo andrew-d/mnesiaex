@@ -1,0 +1,30 @@
+# put whatever (auto)make commands here, they will be included from Makefile.am
+
+dist_erlappsrc_DATA = 					\
+  mnesia_ext.erl
+
+erlappsrc_DATA =					\
+  $(patsubst %.erl.patch, %.erl, $(wildcard *.erl.patch))
+
+dist_erlappinclude_DATA =				\
+
+erlappinclude_DATA = 					\
+  $(patsubst %.hrl.patch, %.hrl, $(wildcard *.hrl.patch))
+
+erlappebin_SCRIPTS =					\
+  @FW_PACKAGE_NAME@.app					\
+  $(patsubst %.erl, %.beam, $(dist_erlappsrc_DATA) $(erlappsrc_DATA))
+
+dist_erlapppriv_DATA =		\
+  $(wildcard *.patch)
+
+check_DATA =			\
+  .dialyzer_ok
+
+%.erl: %.erl.patch
+	@cp @MNESIALOC@/$*.erl .
+	@patch $*.erl $*.erl.patch
+
+%.hrl: %.hrl.patch
+	@cp @MNESIALOC@/$*.hrl .
+	@patch $*.hrl $*.hrl.patch

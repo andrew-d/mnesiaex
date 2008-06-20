@@ -1,0 +1,18 @@
+--- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_log.erl	2007-08-05 08:49:02.000000000 -0700
++++ ./mnesia_log.erl	2008-06-11 03:08:58.000000000 -0700
+@@ -220,6 +220,7 @@
+ %% Write commit records to the latest_log
+ log(C) when  C#commit.disc_copies == [],
+              C#commit.disc_only_copies  == [],
++             C#commit.external_copies  == [],
+              C#commit.schema_ops == [] ->
+     ignore;
+ log(C) ->
+@@ -243,6 +244,7 @@
+ 
+ slog(C) when  C#commit.disc_copies == [],
+              C#commit.disc_only_copies  == [],
++             C#commit.external_copies  == [],
+              C#commit.schema_ops == [] ->
+     ignore;
+ slog(C) ->

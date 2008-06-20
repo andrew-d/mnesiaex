@@ -1,0 +1,11 @@
+--- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_index.erl	2007-08-05 08:49:02.000000000 -0700
++++ ./mnesia_index.erl	2008-06-11 03:08:58.000000000 -0700
+@@ -208,6 +208,8 @@
+ 	    ignore;
+ 	disc_only_copies ->
+ 	    init_disc_index(Tab, PosList);
++        {external_copies, Mod} ->
++            Mod:init_index(Tab, PosList);
+ 	ram_copies ->
+ 	    make_ram_index(Tab, PosList);
+ 	disc_copies ->
