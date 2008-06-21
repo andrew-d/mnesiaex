@@ -1,6 +1,12 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_dumper.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia_dumper.erl	2008-06-11 03:08:58.000000000 -0700
-@@ -430,10 +430,17 @@
++++ ./mnesia_dumper.erl	2008-06-20 15:30:44.000000000 -0700
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %% ``The contents of this file are subject to the Erlang Public License,
+ %% Version 1.1, (the "License"); you may not use this file except in
+ %% compliance with the License. You should have received a copy of the
+@@ -430,10 +432,17 @@
  	    Snmp = mnesia_tm:prepare_snmp(Tab, Key, [Item]),
  	    mnesia_tm:do_snmp(Tid, Snmp);
  
@@ -18,7 +24,7 @@
  disc_delete_table(Tab, Storage) ->
      case mnesia_monitor:use_dir() of
  	true ->
-@@ -461,9 +468,12 @@
+@@ -461,9 +470,12 @@
  	    ignore
      end.
  
@@ -32,7 +38,7 @@
      Indecies = Cs#cstruct.index,
      mnesia_index:del_transient(Tab, Indecies, disc_only_copies).
  
-@@ -487,6 +497,10 @@
+@@ -487,6 +499,10 @@
      {{Tab, Key}, ValList, Op} = Item,
      insert(Tid, Storage, Tab, Key, ValList, Op, InPlace, InitBy);
  
@@ -43,7 +49,7 @@
  insert_op(Tid, _, {op, change_table_copy_type, N, FromS, ToS, TabDef}, InPlace, InitBy) ->
      Cs = mnesia_schema:list2cs(TabDef),
      Val = mnesia_schema:insert_cstruct(Tid, Cs, true), % Update ram only
-@@ -645,6 +659,8 @@
+@@ -645,6 +661,8 @@
  						read_write),
  			    mnesia_log:unsafe_close_log(temp)
  		    end;
@@ -52,7 +58,7 @@
  		_ ->
  		    Args = [{file, mnesia_lib:tab2dat(Tab)},
  			    {type, mnesia_lib:disk_type(Tab, Cs#cstruct.type)},
-@@ -801,7 +817,13 @@
+@@ -801,7 +819,13 @@
  	    insert_cstruct(Tid, Cs, true, InPlace, InitBy);
          Tab /= schema ->
  	    mnesia_controller:del_active_replica(Tab, Node),
@@ -67,7 +73,7 @@
  	    if
  		Node == node() ->
  		    case Cs#cstruct.local_content of
-@@ -865,6 +887,9 @@
+@@ -865,6 +889,9 @@
  	    mnesia_index:init_indecies(Tab, Storage, [Pos]);
  	startup ->
  	    ignore; 
@@ -77,7 +83,7 @@
  	_  ->
  	    mnesia_index:init_indecies(Tab, Storage, [Pos])
      end;
-@@ -878,6 +903,9 @@
+@@ -878,6 +905,9 @@
  	    mnesia_index:del_index_table(Tab, Storage, Pos);
  	startup -> 
  	    ignore;
@@ -87,7 +93,7 @@
  	_ ->
  	    mnesia_index:del_index_table(Tab, Storage, Pos)
      end,
-@@ -909,6 +937,8 @@
+@@ -909,6 +939,8 @@
      Cs = mnesia_schema:list2cs(TabDef),
      insert_cstruct(Tid, Cs, true, InPlace, InitBy).
  
