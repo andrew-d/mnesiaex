@@ -144,7 +144,7 @@ insert (Tab, _Objects) when ?is_tabid (Tab) ->
 match_object (Tab, _Pattern) when ?is_tabid (Tab) ->
   erlang:throw (not_implemented).
 
-%% @spec select (select_continuation ()) -> { [ Match:object () ], More::select_continuation () } | '$end_of_table' | { error, Reason }
+%% @spec select (select_continuation ()) -> { [ Match::object () ], More::select_continuation () } | '$end_of_table' | { error, Reason }
 %% @doc Return additional results from a continuation returned via select/1 
 %% or select/3.
 %% @end
@@ -152,14 +152,14 @@ match_object (Tab, _Pattern) when ?is_tabid (Tab) ->
 select (_Continuation) ->
   erlang:throw (not_implemented).
 
-%% @spec select (tabid (), match_specification ()) -> [ Match::object () ] | { error, Reason }.
+%% @spec select (tabid (), match_specification ()) -> [ Match::object () ] | { error, Reason }
 %% @doc Select all the results that match a given specification.
 %% @end
 
 select (Tab, _MatchSpec) when ?is_tabid (Tab) ->
   erlang:throw (not_implemented).
 
-%% @spec select (tabid (), match_specification (), integer ()) -> { [ Match:object () ], More::select_continuation () } | '$end_of_table' | { error, Reason }
+%% @spec select (tabid (), match_specification (), integer ()) -> { [ Match::object () ], More::select_continuation () } | '$end_of_table' | { error, Reason }
 %% @doc Return a limited number of results from a select, plus a continuation
 %% which can return more via select/1.  You should attempt to honor the limit
 %% field, but the mnesia specification already says the limit is not 
@@ -177,7 +177,7 @@ select (Tab, _MatchSpec, Limit) when ?is_tabid (Tab),
 delete (Tab, _Key) when ?is_tabid (Tab) ->
   erlang:throw (not_implemented).
 
-%% @spec match_delete (tabid (), match_head ()) -> N::integer () | { error, Reason }.
+%% @spec match_delete (tabid (), match_head ()) -> N::integer () | { error, Reason }
 %% @doc Delete all objects which match the pattern.  Returns the number of
 %% objects deleted.
 %% @end

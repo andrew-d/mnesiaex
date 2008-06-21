@@ -1,6 +1,12 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia.erl	2008-06-13 18:54:01.000000000 -0700
-@@ -1566,7 +1566,7 @@
++++ ./mnesia.erl	2008-06-20 15:30:11.000000000 -0700
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %% ``The contents of this file are subject to the Erlang Public License,
+ %% Version 1.1, (the "License"); you may not use this file except in
+ %% compliance with the License. You should have received a copy of the
+@@ -1566,7 +1568,7 @@
  do_dirty_update_counter(SyncMode, Tab, Key, Incr)
    when atom(Tab), Tab /= schema, integer(Incr) ->
      case ?catch_val({Tab, record_validation}) of
@@ -9,7 +15,7 @@
  	    Oid = {Tab, Key},
  	    mnesia_tm:dirty(SyncMode, {Oid, {RecName, Incr}, update_counter});
  	_ ->
-@@ -1863,6 +1863,8 @@
+@@ -1863,6 +1865,8 @@
  	    info_reply(catch ?ets_info(Tab, Item), Tab, Item);
  	disc_only_copies ->
  	    info_reply(catch dets:info(Tab, Item), Tab, Item);
@@ -18,7 +24,7 @@
  	unknown ->
  	    bad_info_reply(Tab, Item);
  	{'EXIT', _} ->
-@@ -1978,13 +1980,14 @@
+@@ -1978,13 +1982,14 @@
  
      Tabs = system_info(tables),
      
@@ -35,7 +41,7 @@
      
      Rfoldl = fun(T, Acc) ->
  		     Rpat =
-@@ -2005,12 +2008,13 @@
+@@ -2005,12 +2010,13 @@
      Rdisp = fun({Rpat, Rtabs}) -> io:format("~p = ~p~n", [Rpat, Rtabs]) end,
      lists:foreach(Rdisp, lists:sort(Repl)).
  
@@ -54,7 +60,7 @@
      end.
  
  system_info(Item) ->
-@@ -2026,9 +2030,10 @@
+@@ -2026,9 +2032,10 @@
  system_info2(db_nodes) ->
      DiscNs = ?catch_val({schema, disc_copies}),
      RamNs = ?catch_val({schema, ram_copies}),

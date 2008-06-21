@@ -3,13 +3,13 @@
 dist_erlappsrc_DATA = 					\
   mnesia_ext.erl
 
+# mnesia puts mnesia.hrl into src, not include, so we do that too
+
 erlappsrc_DATA =					\
+  mnesia.hrl						\
   $(patsubst %.erl.patch, %.erl, $(wildcard *.erl.patch))
 
-dist_erlappinclude_DATA =				\
-
-erlappinclude_DATA = 					\
-  $(patsubst %.hrl.patch, %.hrl, $(wildcard *.hrl.patch))
+dist_erlappinclude_DATA =
 
 erlappebin_SCRIPTS =					\
   @FW_PACKAGE_NAME@.app					\
@@ -28,3 +28,9 @@ check_DATA =			\
 %.hrl: %.hrl.patch
 	@cp @MNESIALOC@/$*.hrl .
 	@patch $*.hrl $*.hrl.patch
+
+CLEANFILES +=			\
+  $(erlappinclude_DATA)		\
+  $(erlappsrc_DATA)
+
+mnesia_ext.erl: mnesia.hrl

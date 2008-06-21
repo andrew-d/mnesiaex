@@ -1,6 +1,12 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_frag.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia_frag.erl	2008-06-11 03:08:58.000000000 -0700
-@@ -174,6 +174,8 @@
++++ ./mnesia_frag.erl	2008-06-20 15:30:55.000000000 -0700
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %%% ``The contents of this file are subject to the Erlang Public License,
+ %%% Version 1.1, (the "License"); you may not use this file except in
+ %%% compliance with the License. You should have received a copy of the
+@@ -174,6 +176,8 @@
  	    length(val({Tab, disc_copies}));
  	n_disc_only_copies ->
  	    length(val({Tab, disc_only_copies}));
@@ -9,7 +15,7 @@
  
  	frag_names ->
  	    frag_names(Tab);
-@@ -384,13 +386,13 @@
+@@ -384,13 +388,13 @@
      %% Verify keys
      ValidKeys = [foreign_key, n_fragments, node_pool,
  		 n_ram_copies, n_disc_copies, n_disc_only_copies,
@@ -25,7 +31,7 @@
  	pick_props(Tab, Cs, ForeignKey),
  
      %% Verify node_pool
-@@ -404,6 +406,7 @@
+@@ -404,6 +408,7 @@
      NR  = mnesia_schema:pick(Tab, n_ram_copies, Props, 0),
      ND  = mnesia_schema:pick(Tab, n_disc_copies, Props, 0),
      NDO = mnesia_schema:pick(Tab, n_disc_only_copies, Props, 0),
@@ -33,7 +39,7 @@
      
      PosInt = fun(I) when integer(I), I >= 0 -> true;
  		(_I) -> false
-@@ -414,6 +417,8 @@
+@@ -414,6 +419,8 @@
  			 {bad_type, Tab, {n_disc_copies, ND}}),
      mnesia_schema:verify(true, PosInt(NDO),
  			 {bad_type, Tab, {n_disc_only_copies, NDO}}),
@@ -42,7 +48,7 @@
      
      %% Verify n_fragments
      Cs2 = verify_n_fragments(N, Cs, Mode),
-@@ -428,13 +433,13 @@
+@@ -428,13 +435,13 @@
  		     hash_module = HashMod,
  		     hash_state  = HashState2},
      if
@@ -60,7 +66,7 @@
      Tab = Cs#cstruct.name,
      
      LC = Cs#cstruct.local_content,
-@@ -448,14 +453,15 @@
+@@ -448,14 +455,15 @@
      %% Add empty fragments
      CommonProps = [{base_table, Tab}],
      Cs2 = Cs#cstruct{frag_properties = lists:sort(CommonProps)},
@@ -78,7 +84,7 @@
  	activate  ->
  	    Reason = {combine_error, Cs#cstruct.name, {n_fragments, N}},
  	    mnesia_schema:verify(1, N, Reason),
-@@ -493,7 +499,8 @@
+@@ -493,7 +501,8 @@
      DefaultNR = length(val({ForeignTab, ram_copies})), 
      DefaultND = length(val({ForeignTab, disc_copies})), 
      DefaultNDO = length(val({ForeignTab, disc_only_copies})),
@@ -88,7 +94,7 @@
  pick_props(Tab, Cs, undefined) ->
      Props = Cs#cstruct.frag_properties,
      DefaultN = 1,
-@@ -503,22 +510,23 @@
+@@ -503,22 +512,23 @@
      DefaultNR = 1,
      DefaultND = 0,
      DefaultNDO = 0,
@@ -117,7 +123,7 @@
      BaseProps = CommonCs#cstruct.frag_properties ++  
  	[{foreign_key, FH#frag_state.foreign_key},
  	 {hash_module, FH#frag_state.hash_module},
-@@ -531,25 +539,29 @@
+@@ -531,25 +541,29 @@
  	activate ->
  	    [BaseCs];
  	create ->
@@ -156,7 +162,7 @@
      mnesia:abort({combine_error,  Cs#cstruct.name, "Too few nodes in node_pool"}).
  
  set_frag_node(Cs, Pos, Head) ->
-@@ -726,13 +738,15 @@
+@@ -726,13 +740,15 @@
      NR = length(Cs#cstruct.ram_copies), 
      ND = length(Cs#cstruct.disc_copies), 
      NDO = length(Cs#cstruct.disc_only_copies),
@@ -174,7 +180,7 @@
      [NewOp] = mnesia_schema:make_create_table(NewCs2),
  
      SplitOps = split(Tab, FH2, FromIndecies, FragNames, []),
-@@ -1209,7 +1223,8 @@
+@@ -1209,7 +1225,8 @@
      Dist2 =  incr_nodes(val({Frag, ram_copies}), Dist),
      Dist3 =  incr_nodes(val({Frag, disc_copies}), Dist2),
      Dist4 =  incr_nodes(val({Frag, disc_only_copies}), Dist3),

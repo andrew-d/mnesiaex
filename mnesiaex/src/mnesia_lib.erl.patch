@@ -1,6 +1,12 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_lib.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia_lib.erl	2008-06-13 21:08:35.000000000 -0700
-@@ -319,12 +319,21 @@
++++ ./mnesia_lib.erl	2008-06-20 15:31:50.000000000 -0700
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %% ``The contents of this file are subject to the Erlang Public License,
+ %% Version 1.1, (the "License"); you may not use this file except in
+ %% compliance with the License. You should have received a copy of the
+@@ -319,12 +321,21 @@
  storage_type_at_node(Node, Tab) ->
      search_key(Node, [{disc_copies, val({Tab, disc_copies})},
  		      {ram_copies, val({Tab, ram_copies})},
@@ -24,7 +30,7 @@
  
  schema_cs_to_storage_type(Node, Cs) ->
      case cs_to_storage_type(Node, Cs) of
-@@ -545,6 +554,7 @@
+@@ -545,6 +556,7 @@
      ?ets_lookup_element(mnesia_gvar, Name, 2).
  
  cs_to_nodes(Cs) ->
@@ -32,7 +38,7 @@
      Cs#cstruct.disc_only_copies ++
      Cs#cstruct.disc_copies ++
      Cs#cstruct.ram_copies.
-@@ -1017,18 +1027,32 @@
+@@ -1017,18 +1029,32 @@
      db_get(val({Tab, storage_type}), Tab, Key).
  db_get(ram_copies, Tab, Key) -> ?ets_lookup(Tab, Key);
  db_get(disc_copies, Tab, Key) -> ?ets_lookup(Tab, Key);
@@ -66,7 +72,7 @@
  db_chunk(disc_only_copies, State) ->
      dets:select(State);
  db_chunk(_, State) ->
-@@ -1039,7 +1063,12 @@
+@@ -1039,7 +1065,12 @@
  
  db_put(ram_copies, Tab, Val) -> ?ets_insert(Tab, Val), ok;
  db_put(disc_copies, Tab, Val) -> ?ets_insert(Tab, Val), ok;
@@ -80,7 +86,7 @@
  
  db_match_object(Tab, Pat) ->
      db_match_object(val({Tab, storage_type}), Tab, Pat).
-@@ -1052,6 +1081,11 @@
+@@ -1052,6 +1083,11 @@
  	_ -> Res
      end.
  
@@ -92,7 +98,7 @@
  catch_match_object(disc_only_copies, Tab, Pat) ->
      catch dets:match_object(Tab, Pat);
  catch_match_object(_, Tab, Pat) ->
-@@ -1069,16 +1103,38 @@
+@@ -1069,16 +1105,38 @@
  	_ -> Res
      end.
  
@@ -131,7 +137,7 @@
  db_select_cont(disc_only_copies, Cont0, Ms) ->
      Cont = dets:repair_continuation(Cont0, Ms),
      dets:select(Cont);
-@@ -1095,49 +1151,91 @@
+@@ -1095,49 +1153,91 @@
  db_fixtable(dets, Tab, Bool) ->
      dets:safe_fixtable(Tab, Bool);
  db_fixtable(disc_only_copies, Tab, Bool) ->
@@ -231,7 +237,7 @@
  
  db_update_counter(Tab, C, Val) ->
      db_update_counter(val({Tab, storage_type}), Tab, C, Val).
-@@ -1146,13 +1244,23 @@
+@@ -1146,13 +1246,23 @@
  db_update_counter(disc_copies, Tab, C, Val) ->
      ?ets_update_counter(Tab, C, Val);
  db_update_counter(disc_only_copies, Tab, C, Val) ->

@@ -1,6 +1,12 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_loader.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia_loader.erl	2008-06-19 21:42:22.000000000 -0700
-@@ -135,7 +135,12 @@
++++ ./mnesia_loader.erl	2008-06-20 15:31:53.000000000 -0700
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %% ``The contents of this file are subject to the Erlang Public License,
+ %% Version 1.1, (the "License"); you may not use this file except in
+ %% compliance with the License. You should have received a copy of the
+@@ -135,7 +137,12 @@
  		{error, Error} ->
  		    {not_loaded, {"Failed to create dets table", Error}}
  	    end
@@ -14,7 +20,7 @@
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %% Load a table from a remote node
-@@ -384,7 +389,15 @@
+@@ -384,7 +391,15 @@
  		    {Storage, Tab};
  		Else ->
  		    Else
@@ -31,7 +37,7 @@
      end.
  
  tab_receiver(Node, Tab, Storage, Cs, PConv, OrigTabRec) ->
-@@ -452,6 +465,8 @@
+@@ -452,6 +467,8 @@
  	    get_data(Pid, TabRec)
      end.
  
@@ -40,7 +46,7 @@
  init_table(Tab, disc_only_copies, Fun, false, DetsInfo,Sender) ->
      ErtsVer = erlang:system_info(version),
      case DetsInfo of
-@@ -574,7 +589,10 @@
+@@ -574,7 +591,10 @@
  	    ok;
  	false ->
  	    ok
@@ -52,7 +58,7 @@
  
  down(Tab, Storage) ->
      case Storage of
-@@ -583,7 +601,9 @@
+@@ -583,7 +603,9 @@
  	disc_copies ->
  	    catch ?ets_delete_table(Tab);
  	disc_only_copies ->
@@ -63,7 +69,7 @@
      end,
      mnesia_checkpoint:tm_del_copy(Tab, node()),
      mnesia_controller:sync_del_table_copy_whereabouts(Tab, node()),
-@@ -608,21 +628,27 @@
+@@ -608,21 +630,27 @@
  db_erase({disc_copies, Tab}, Key) ->
      true = ?ets_delete(Tab, Key);
  db_erase({disc_only_copies, Tab}, Key) ->
