@@ -35,6 +35,7 @@ check_DATA =			\
 
 %.erl: @MNESIALOC@/%.erl
 	@cp @MNESIALOC@/$*.erl .
+	@perl -i -pe 'print "%% \@hidden\n" unless $$i++;' $*.erl
 
 CLEANFILES +=			\
   $(erlappinclude_DATA)		\
