@@ -1,2 +1,2 @@
-#TESTS = 		\
-#  module-myapp
+TESTS = 		\
+  module-ext
