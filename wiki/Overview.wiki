@@ -18,7 +18,7 @@ What should work: everything else!  In particular:
   1. "normal" reads, writes, deletes, selects, matches, etc.
   1. index reads; although I confess this hasn't been tested that much.  Plus, indexing is essentially [#Indexing deferred to the storage layer].
   1. backups (and checkpoint retainers).
-  1. schema operations (other than mnesia:change_table_copy_type/3).  mnesia:add_table_copy/3, mnesia:del_table_copy/3, mnesia:move_table_copy/3, etc.  For instance, all the unit tests of [http://code.googl.com/p/fragmentron fragmentron] pass.
+  1. schema operations (other than mnesia:change_table_copy_type/3).  mnesia:add_table_copy/3, mnesia:del_table_copy/3, mnesia:move_table_copy/3, etc.  For instance, all the unit tests of [http://code.google.com/p/fragmentron fragmentron] pass.
 
 Working doesn't mean optimized, of course.  For instance, remote table
 loading for dets can use bchunks, whereas we just use select always;
