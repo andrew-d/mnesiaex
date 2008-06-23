@@ -13,7 +13,7 @@
 
 = Installing =
 
-The project uses automake.  The default prefix is /usr; if you don't like that, use the {{{--prefix}}} option to configure.
+The project uses automake[[#1 1]].  The default prefix is /usr; if you don't like that, use the {{{--prefix}}} option to configure.
 {{{
 % ./configure && make && make check 
 }}}
@@ -31,3 +31,9 @@ build and install will install as mnesia-4.3.5ext0.
 
   * Ubuntu 32 Linux (gusty) with mnesia-4.3.5 .
   * OS/X 10.4 i386 with mnesia-4.3.5 (installed via fink).
+
+= Footnotes =
+
+== 1 ==
+
+More precisely, downloadable source tarballs use automake to build.  A source code checkout of the repository uses [http://code.google.com/p/fwtemplates framewerk] to build, and if you don't know what that is, you probably want to stick with the tarballs.
