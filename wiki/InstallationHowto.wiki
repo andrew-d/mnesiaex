@@ -1,4 +1,4 @@
-﻿#summary Installation Hints
+#summary Installation Hints
 #labels Featured,Phase-Deploy
 
 = Prerequisites =
@@ -28,3 +28,4 @@ build and install will install as mnesia-4.3.5ext0.
 = Tested Platforms =
 
   * Ubuntu 32 Linux (gusty) with mnesia-4.3.5 .
+  * OS/X 10.4 i386 with mnesia-4.3.5 (installed via fink).
