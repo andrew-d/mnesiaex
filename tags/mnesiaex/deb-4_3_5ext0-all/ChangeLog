@@ -1,0 +1,4 @@
+Version ext0
+  * Initial version.  NB, actual package version will depend upon installed
+  mnesia version, e.g., if you have mnesia-4.3.5 installed, then will install
+  as mnesia-4.3.5ext0
