@@ -1,0 +1,32 @@
+﻿#summary Overview
+#labels Featured
+
+= Motivation =
+
+The goal of this project is to provide an extensible storage API for
+Mnesia.  This way, the strengths of Mnesia (distributed, transactional,
+impedence match to Erlang) can be coupled to the universe of possible
+storage strategies.
+
+= Status =
+
+What doesn't work:
+  1. upgrading a running mnesia installation.  we have changed the cstruct record and didn't think at all about how to migrate an existing schema over to the new record.  
+  1. mnesia:change_table_copy_type/3 ; it seems very reasonable to support this in the future, we've just been busy.  submit a patch!
+
+What should work: everything else!  In particular:
+  1. "normal" reads, writes, deletes, selects, matches, etc.
+  1. index reads; although I confess this hasn't been tested that much.  Plus, indexing is essentially [#Indexing deferred to the storage layer].
+  1. backups (and checkpoint retainers).
+  1. schema operations (other than mnesia:change_table_copy_type/3).  mnesia:add_table_copy/3, mnesia:del_table_copy/3, mnesia:move_table_copy/3, etc.  For instance, all the unit tests of [http://code.googl.com/p/fragmentron fragmentron] pass.
+
+Working doesn't mean optimized, of course.  For instance, remote table
+loading for dets can use bchunks, whereas we just use select always;
+so we could improve throughput by defining a bchunk callback to the
+mnesia_ext behaviour and exploiting that.
+
+If you have ideas for improvement, we'd like to hear about them.
+
+= Indexing =
+
+Explain me.
