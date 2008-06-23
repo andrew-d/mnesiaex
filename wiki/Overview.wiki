@@ -33,7 +33,6 @@ The indexing strategy in mnesia_ext is "advisory".  Basically, when a
 user creates (deletes) an index on a table, the add_index/2 (delete_index/2 respectively) callback is executed.  The semantics are "hey, the user 
 would like match specifications with a particular position bound to 
 work efficiently." (or "no longer work efficiently" for delete_index/2).
-That's basically it.  
 
 There are no special read or write calls that correspond to index_read,
 index_match_object, etc.  Instead the match_delete/2, match_object/2,
