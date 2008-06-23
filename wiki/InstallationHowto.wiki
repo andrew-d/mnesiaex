@@ -1,4 +1,4 @@
-#summary Installation Hints
+﻿#summary Installation Hints
 #labels Featured,Phase-Deploy
 
 = Prerequisites =
@@ -14,7 +14,9 @@
 = Installing =
 
 The project uses automake.  The default prefix is /usr; if you don't like that, use the {{{--prefix}}} option to configure.
-
+{{{
+% ./configure && make && make check 
+}}}
 Running {{{make check}}} is strongly suggested.
 
 The project is distributed as a set of patches.  At build time it tries to
