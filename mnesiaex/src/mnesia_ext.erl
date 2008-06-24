@@ -1,3 +1,4 @@
+%% @hidden
 %% @doc API for mnesia storage modules.
 %% @end
 

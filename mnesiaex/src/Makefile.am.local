@@ -25,6 +25,16 @@ dist_erlapppriv_DATA =		\
 check_DATA =			\
   .dialyzer_ok
 
+# due to the tricks i'm playing, this is not getting made correctly
+# the first time, so here's a band-aid.
+
+noinst_DATA =			\
+  .force_make_app_file
+
+.force_make_app_file:  $(dist_erlappsrc_DATA) $(erlappsrc_DATA)
+	@rm @FW_PACKAGE_NAME@.app
+	@make @FW_PACKAGE_NAME@.app && touch $@
+
 %.erl: %.erl.patch 
 	@cp @MNESIALOC@/$*.erl .
 	@patch $*.erl $*.erl.patch
@@ -39,7 +49,8 @@ check_DATA =			\
 
 CLEANFILES +=			\
   $(erlappinclude_DATA)		\
-  $(erlappsrc_DATA)
+  $(erlappsrc_DATA)		\
+  .force_make_app_file
 
 mnesia_ext.erl: mnesia.hrl
 
