@@ -14,7 +14,7 @@ What doesn't work:
   1. upgrading a running mnesia installation.  we have changed the cstruct record and didn't think at all about how to migrate an existing schema over to the new record.  
   1. mnesia:change_table_copy_type/3 ; it seems very reasonable to support this in the future, we've just been busy.  submit a patch!
 
-What should work: everything else!  In particular:
+What should work: everything else![[#1 1]]  In particular:
   1. "normal" reads, writes, deletes, selects, matches, etc.
   1. index reads; although I confess this hasn't been tested that much.  Plus, indexing is essentially [#Indexing deferred to the storage layer].
   1. backups (and checkpoint retainers).
@@ -43,3 +43,9 @@ are supposed to run "fast" if they have been "indexed".
 = Example =
 
 Tcerl has a wiki page with [http://code.google.com/p/tcerl/wiki/Example example usage].
+
+= Footnote =
+
+== 1 ==
+
+We intended it to work anyway.  It would be nice to have some kind of exhaustive mnesia test suite to make stronger statements.
