@@ -1,3 +1,6 @@
+Version ext2
+  * Fix db_chunk problem (prevented remote table loading from working)
+
 Version ext1
   * Include ext.hrl in the dist tarball.
   * Disable erlrc hooks (not upgradeable due to cstruct).
