@@ -1,5 +1,5 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_loader.erl	2007-08-05 08:49:02.000000000 -0700
-+++ ./mnesia_loader.erl	2008-06-20 15:40:43.000000000 -0700
++++ mnesia_loader.erl	2008-07-14 09:07:02.000000000 -0700
 @@ -1,3 +1,5 @@
 +%% @hidden
 +
@@ -38,16 +38,20 @@
      end.
  
  tab_receiver(Node, Tab, Storage, Cs, PConv, OrigTabRec) ->
-@@ -452,6 +468,8 @@
+@@ -452,6 +468,12 @@
  	    get_data(Pid, TabRec)
      end.
  
-+init_table(Tab, {external_copies,Mod}, Fun, false, false, Sender) ->
-+  Mod:init_table(Tab, Fun, Sender);
++init_table(Tab, {external_copies,Mod}, Fun, false, false, _Sender) ->
++    case catch Mod:init_table(Tab, Fun) of
++	true ->
++	    ok;
++	{'EXIT', Else} -> Else
++    end;
  init_table(Tab, disc_only_copies, Fun, false, DetsInfo,Sender) ->
      ErtsVer = erlang:system_info(version),
      case DetsInfo of
-@@ -574,7 +592,10 @@
+@@ -574,7 +596,10 @@
  	    ok;
  	false ->
  	    ok
@@ -59,7 +63,7 @@
  
  down(Tab, Storage) ->
      case Storage of
-@@ -583,7 +604,9 @@
+@@ -583,7 +608,9 @@
  	disc_copies ->
  	    catch ?ets_delete_table(Tab);
  	disc_only_copies ->
@@ -70,7 +74,7 @@
      end,
      mnesia_checkpoint:tm_del_copy(Tab, node()),
      mnesia_controller:sync_del_table_copy_whereabouts(Tab, node()),
-@@ -608,21 +631,27 @@
+@@ -608,21 +635,27 @@
  db_erase({disc_copies, Tab}, Key) ->
      true = ?ets_delete(Tab, Key);
  db_erase({disc_only_copies, Tab}, Key) ->
