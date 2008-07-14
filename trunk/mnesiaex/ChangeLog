@@ -1,5 +1,6 @@
 Version ext2
   * Fix db_chunk problem (prevented remote table loading from working)
+  * catch Mod:init_table just like how ets:init_table is called
 
 Version ext1
   * Include ext.hrl in the dist tarball.
