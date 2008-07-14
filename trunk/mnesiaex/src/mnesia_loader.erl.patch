@@ -1,5 +1,5 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_loader.erl	2007-08-05 08:49:02.000000000 -0700
-+++ mnesia_loader.erl	2008-07-14 09:07:02.000000000 -0700
++++ mnesia_loader.erl	2008-07-14 11:46:59.000000000 -0700
 @@ -1,3 +1,5 @@
 +%% @hidden
 +
@@ -42,8 +42,8 @@
  	    get_data(Pid, TabRec)
      end.
  
-+init_table(Tab, {external_copies,Mod}, Fun, false, false, _Sender) ->
-+    case catch Mod:init_table(Tab, Fun) of
++init_table(Tab, {external_copies,Mod}, Fun, false, false, Sender) ->
++    case catch Mod:init_table(Tab, Fun, Sender) of
 +	true ->
 +	    ok;
 +	{'EXIT', Else} -> Else
