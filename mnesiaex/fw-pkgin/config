@@ -11,7 +11,7 @@ test $? = 0 || {
   exit 1 ;
 } ;
 
-VERSIONSUFFIX="ext2" ;
+VERSIONSUFFIX="ext3" ;
 
 FW_PACKAGE_NAME="mnesia"
 FW_PACKAGE_VERSION="${MNESIAVER}${VERSIONSUFFIX}"

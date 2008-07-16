@@ -1,3 +1,6 @@
+Version ext3
+  * Allow adjustment of mnesia_tm priority
+
 Version ext2
   * Fix db_chunk problem (prevented remote table loading from working)
   * catch Mod:init_table just like how [d]ets:init_table is called
