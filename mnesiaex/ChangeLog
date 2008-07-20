@@ -1,5 +1,7 @@
 Version ext3
   * Allow adjustment of mnesia_tm priority
+  * Fix dets:match_delete/2 ok match bug (inherited from mnesia)
+  * Accept either dets or ets style Mod:match_delete/2 in mnesia_loader
 
 Version ext2
   * Fix db_chunk problem (prevented remote table loading from working)
