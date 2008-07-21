@@ -1,5 +1,5 @@
 --- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia_index.erl	2007-08-05 08:49:02.000000000 -0700
-+++ mnesia_index.erl	2008-07-20 14:35:07.000000000 -0700
++++ mnesia_index.erl	2008-07-21 05:45:52.000000000 -0700
 @@ -1,3 +1,5 @@
 +%% @hidden
 +
@@ -15,13 +15,14 @@
  	ram_copies ->
  	    make_ram_index(Tab, PosList);
  	disc_copies ->
-@@ -360,7 +364,9 @@
+@@ -360,7 +364,10 @@
  db_match_erase({ram, Ixt}, Pat) ->
      true = ?ets_match_delete(Ixt, Pat);
  db_match_erase({dets, Ixt}, Pat) ->
 -    ok = dets:match_delete(Ixt, Pat).
 +    case dets:match_delete(Ixt, Pat) of
-+      N when is_integer (N) -> true
++      N when is_integer (N) -> ok;
++      ok -> ok
 +    end.
      
  db_match({ram, Ixt}, Pat) ->
