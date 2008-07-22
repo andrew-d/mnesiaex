@@ -1,0 +1,5 @@
+TESTS = 		\
+  module-ext
+
+EXTRA_DIST += 		\
+  ext.hrl
