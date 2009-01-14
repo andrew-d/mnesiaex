@@ -1,6 +1,7 @@
 Version ext4 [NOT YET RELEASED]
   * Support multiple patch sets for different mnesia versions
   * Include patch set for mnesia 4.4.2 from Dave Smith <dsmith@thehive.com>
+  * Include patch set for mnesia 4.4.7 (based on 4.4.2 with small fixes)
 
 Version ext3
   * Allow adjustment of mnesia_tm priority
