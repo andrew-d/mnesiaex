@@ -3,7 +3,7 @@
 dist_erlappsrc_DATA = 					\
   mnesia_ext.erl
 
-mnesiapatched = $(patsubst %.erl.patch, %.erl, $(wildcard *.erl.patch))
+mnesiapatched = $(patsubst patches/$(PATCHVER)/%.erl.patch, %.erl, $(wildcard patches/$(PATCHVER)/*.erl.patch))
 mnesiaraw = $(filter-out $(mnesiapatched), $(patsubst $(MNESIALOC)/%.erl, %.erl, $(wildcard $(MNESIALOC)/*.erl)))
 
 # mnesia puts mnesia.hrl into src, not include, so we do that too

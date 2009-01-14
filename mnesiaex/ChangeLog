@@ -1,3 +1,7 @@
+Version ext4 [NOT YET RELEASED]
+  * Support multiple patch sets for different mnesia versions
+  * Include patch set for mnesia 4.4.2 from Dave Smith <dsmith@thehive.com>
+
 Version ext3
   * Allow adjustment of mnesia_tm priority
   * Fix dets:match_delete/2 ok match bug (inherited from mnesia)
