@@ -1,0 +1,17 @@
+Version ext3
+  * Allow adjustment of mnesia_tm priority
+  * Fix dets:match_delete/2 ok match bug (inherited from mnesia)
+  * Accept either dets or ets style Mod:match_delete/2 in mnesia_loader
+
+Version ext2
+  * Fix db_chunk problem (prevented remote table loading from working)
+  * catch Mod:init_table just like how [d]ets:init_table is called
+
+Version ext1
+  * Include ext.hrl in the dist tarball.
+  * Disable erlrc hooks (not upgradeable due to cstruct).
+
+Version ext0
+  * Initial version.  NB, actual package version will depend upon installed
+  mnesia version, e.g., if you have mnesia-4.3.5 installed, then will install
+  as mnesia-4.3.5ext0
