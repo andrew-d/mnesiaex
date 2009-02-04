@@ -54,4 +54,4 @@ CLEANFILES +=			\
 
 mnesia_ext.erl: mnesia.hrl
 
-DIALYZERFLAGS = -Wno_return -Wno_improper_lists
+DIALYZERFLAGS += -Wno_return -Wno_improper_lists
