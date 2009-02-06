@@ -1,1 +1,1 @@
-dist_noinst_DATA = $(wildcard *.patch)
+EXTRA_DIST = $(wildcard *.patch)
