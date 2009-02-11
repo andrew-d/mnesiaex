@@ -49,7 +49,7 @@
  	    ok
 -    end.
 +    end;
-+handle_last({{external_copies, _}, _}, _Type, nobin) ->
++handle_last(_Storage, _Type, nobin) ->
 +    ok.
 +
  
