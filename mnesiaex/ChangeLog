@@ -1,9 +1,11 @@
-Version ext4 [NOT YET RELEASED]
+Version ext4
   * DIALYZERFLAGS +=
   * Support multiple patch sets for different mnesia versions
   * Include patch set for mnesia 4.4.2 from Dave Smith <dsmith@thehive.com>
   * Include patch set for mnesia 4.4.7 (based on 4.4.2 with small fixes)
   * Change version suffix from extN to .N for code server
+  	e.g. if you have mnesia-4.3.5 installed, then this will install
+	mnesia-4.3.5.4
 
 Version ext3
   * Allow adjustment of mnesia_tm priority
