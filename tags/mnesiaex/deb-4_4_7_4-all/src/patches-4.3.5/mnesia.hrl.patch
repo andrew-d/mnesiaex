@@ -1,0 +1,18 @@
+--- /usr/lib/erlang/lib/mnesia-4.3.5/src/mnesia.hrl	2007-08-05 08:49:02.000000000 -0700
++++ ./mnesia.hrl	2008-06-11 03:09:04.000000000 -0700
+@@ -57,6 +57,7 @@
+ 		  ram_copies = [],                 % [Node]
+ 		  disc_copies = [],                % [Node]
+ 		  disc_only_copies = [],           % [Node]
++                  external_copies = [],            % [Node]
+ 		  load_order = 0,                  % Integer
+ 		  access_mode = read_write,        % read_write | read_only
+ 		  index = [],                      % [Integer]
+@@ -90,6 +91,7 @@
+ 		 ram_copies = [],
+ 		 disc_copies = [],
+ 		 disc_only_copies = [],
++                 external_copies = [],
+ 		 snmp = [],
+ 		 schema_ops = []
+ 		}).
