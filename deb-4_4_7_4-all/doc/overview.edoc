@@ -1,0 +1,4 @@
+@author Joel Reymont, Paul Mineiro
+@copyright 2008 N54, Inc.
+@title Mnesia storage API extensions.
+@doc Storage API for Mnesia.  Extends Mnesia to use arbitrary table implementations.
