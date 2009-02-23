@@ -1,5 +1,6 @@
 TESTS = 		\
-  module-ext
+  module-ext		\
+  test-sendtable
 
 EXTRA_DIST += 		\
   ext.hrl

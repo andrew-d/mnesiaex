@@ -1,0 +1,88 @@
+#! /bin/sh
+
+ERL_CRASH_DUMP=${ERL_CRASH_DUMP-/dev/null}
+export ERL_CRASH_DUMP
+
+cleanup () {
+  erl -pa ../src -sname mnesia_sendtable_killah -eval '
+    "mnesia_sendtable_killah@" ++ Host = atom_to_list (node ()),
+    Other = list_to_atom ("mnesia_sendtable_test1@" ++ Host),
+    MoreOther = list_to_atom ("mnesia_sendtable_test2@" ++ Host),
+
+    rpc:call (Other, erlang, halt, []),
+    rpc:call (MoreOther, erlang, halt, [])
+  ' -noshell -noinput -s erlang halt 
+  wait
+  rm -rf Mnesia*
+}
+
+wait_for_node () \
+  {
+    erl -hidden -pa ../src -sname wazzup$pid      \
+        -noshell -noinput -eval '
+      Host = lists:last (string:tokens (atom_to_list (node ()), "@")),
+      Other = hd (init:get_plain_arguments ()),
+      OtherNode = list_to_atom (Other ++ "@" ++ Host),
+      While = fun (F, W) -> case F () of false -> ok; 
+                                         true -> receive after 1000 -> ok end,
+                                                 W (F, W)
+                            end
+              end,
+      While (fun () -> pang =:= net_adm:ping (OtherNode) end, While),
+      While (fun () -> rpc:call (OtherNode, erlang, whereis, [ mnesia_sup ]) =:= undefined end, While),
+      ok
+    ' -s erlang halt -extra "$1" || exit 1
+  }
+
+rm -rf Mnesia*
+
+{
+erl -pa ../src -sname mnesia_sendtable_test1 -s mnesia \
+    -eval '
+  mnesia:change_table_copy_type (schema, node (), disc_copies),
+  timer:sleep (60000)'  \
+  -s erlang halt -noshell -noinput &
+
+wait_for_node mnesia_sendtable_test1
+
+erl -pa ../src -sname mnesia_sendtable_test2 -s mnesia \
+    -eval '
+  "mnesia_sendtable_test2@" ++ Host = atom_to_list (node ()),
+  Self = node (),
+  Other = list_to_atom ("mnesia_sendtable_test1@" ++ Host),
+  mnesia:change_config (extra_db_nodes, [ Other ]),
+  mnesia:change_table_copy_type (schema, node (), disc_copies),
+  { atomic, ok } = 
+    mnesia:create_table (dild, 
+                         [ { type, { external, bag, ramtab } },
+                           { external_copies, [ Self, Other ] } ]),
+  ok = mnesia:dirty_write (dild, { dild, wazz, up }),
+  ok = mnesia:dirty_write (dild, { dild, hey, dood }),
+  [ Other, Self ] = lists:sort (mnesia:table_info (dild, external_copies)),
+  [ Other, Self ] = lists:sort (mnesia:table_info (dild, active_replicas))' \
+  -s init stop -noshell -noinput 
+
+rm -rf Mnesia.mnesia_sendtable_test2*
+
+erl -pa ../src -sname mnesia_sendtable_test2 -s mnesia \
+    -eval '
+  "mnesia_sendtable_test2@" ++ Host = atom_to_list (node ()),
+  Self = node (),
+  Other = list_to_atom ("mnesia_sendtable_test1@" ++ Host),
+  ramtab:module_info (),
+  mnesia:change_config (extra_db_nodes, [ Other ]),
+  mnesia:change_table_copy_type (schema, node (), disc_copies),
+  timer:sleep (10000),
+  [ Other, Self ] = lists:sort (mnesia:table_info (dild, external_copies)),
+  [ Other, Self ] = lists:sort (mnesia:table_info (dild, active_replicas)),
+  [ { dild, wazz, up } ] = mnesia:dirty_read (dild, wazz),
+  [ { dild, hey, dood } ] = mnesia:dirty_read (dild, hey),
+  rpc:call (Other, erlang, halt, []) ' \
+  -s erlang halt -noshell -noinput 
+} 2>&1 > sendtable.output || { cleanup; exit 1; }
+
+wait
+
+rm -rf Mnesia*
+
+exit 0
