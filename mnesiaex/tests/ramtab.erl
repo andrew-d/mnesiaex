@@ -78,5 +78,5 @@ delete_index(_Tab, _Pos) ->
 init_index(_Tab, _Pos) ->
     ok.
 
-init_table(_Tab, _InitFun, _Sender) ->
-    ok.
+init_table(Tab, InitFun, _Sender) ->
+    ets:init_table (Tab, InitFun).

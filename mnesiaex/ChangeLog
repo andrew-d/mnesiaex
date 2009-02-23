@@ -1,3 +1,7 @@
+Version ext5
+  * fixed sendtable bug (patch for 4.3.5 did not make it to later versions)
+  * added unit test for sendtable
+
 Version ext4
   * DIALYZERFLAGS +=
   * Support multiple patch sets for different mnesia versions

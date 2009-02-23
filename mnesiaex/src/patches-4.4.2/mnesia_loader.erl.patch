@@ -1,5 +1,5 @@
---- mnesia-4.4.2/src/mnesia_loader.erl	2007-11-26 06:08:32.000000000 -0700
-+++ mnesia-4.4.2ext1/src/mnesia_loader.erl	2008-07-11 20:59:41.000000000 -0600
+--- mnesia_loader.erl.orig	2009-01-14 13:22:53.000000000 -0800
++++ mnesia_loader.erl	2009-01-14 13:26:49.000000000 -0800
 @@ -135,7 +135,14 @@
  		{error, Error} ->
  		    {not_loaded, {"Failed to create dets table", Error}}
@@ -33,17 +33,24 @@
      end.
  
  tab_receiver(Node, Tab, Storage, Cs, PConv, OrigTabRec) ->
-@@ -452,6 +467,9 @@
+@@ -452,6 +467,16 @@
  	    get_data(Pid, TabRec)
      end.
  
 +
-+init_table(Tab, {external_copies, Mod}, Fun, false, false, Sender) ->
-+    Mod:init_table(Tab, Fun, Sender);
++init_table(Tab, {external_copies,Mod}, Fun, false, false, Sender) ->
++    case catch Mod:init_table(Tab, Fun, Sender) of
++	true ->
++	    ok;
++        ok ->           % "ets-style" is true, "dets-style" is ok;
++                        % be nice and accept both :)
++            ok;
++	{'EXIT', Else} -> Else
++    end;
  init_table(Tab, disc_only_copies, Fun, false, DetsInfo,Sender) ->
      ErtsVer = erlang:system_info(version),
      case DetsInfo of
-@@ -577,7 +595,10 @@
+@@ -577,7 +602,10 @@
  	    ok;
  	false ->
  	    ok
@@ -55,7 +62,7 @@
  
  down(Tab, Storage) ->
      case Storage of
-@@ -588,7 +609,9 @@
+@@ -588,7 +616,9 @@
  	disc_only_copies ->
  	    TmpFile = mnesia_lib:tab2tmp(Tab),
  	    mnesia_lib:dets_sync_close(Tab),
@@ -66,7 +73,7 @@
      end,
      mnesia_checkpoint:tm_del_copy(Tab, node()),
      mnesia_controller:sync_del_table_copy_whereabouts(Tab, node()),
-@@ -613,21 +636,27 @@
+@@ -613,21 +643,27 @@
  db_erase({disc_copies, Tab}, Key) ->
      true = ?ets_delete(Tab, Key);
  db_erase({disc_only_copies, Tab}, Key) ->
