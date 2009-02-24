@@ -1,6 +1,6 @@
---- mnesia_loader.erl.orig	2009-01-14 13:22:53.000000000 -0800
-+++ mnesia_loader.erl	2009-01-14 13:26:49.000000000 -0800
-@@ -135,7 +135,14 @@
+--- /usr/lib/erlang/lib/mnesia-4.4.7/src/mnesia_loader.erl	2009-01-16 14:56:40.000000000 -0800
++++ mnesia_loader.erl	2009-02-24 10:28:34.000000000 -0800
+@@ -135,7 +135,13 @@
  		{error, Error} ->
  		    {not_loaded, {"Failed to create dets table", Error}}
  	    end
@@ -12,11 +12,10 @@
 +    set({Tab, load_node}, node()),
 +    set({Tab, load_reason}, Reason),
 +    {loaded, ok}.
-+
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %% Load a table from a remote node
-@@ -384,7 +391,15 @@
+@@ -384,7 +390,15 @@
  		    {Storage, Tab};
  		Else ->
  		    Else
@@ -33,11 +32,10 @@
      end.
  
  tab_receiver(Node, Tab, Storage, Cs, PConv, OrigTabRec) ->
-@@ -452,6 +467,16 @@
+@@ -452,6 +466,15 @@
  	    get_data(Pid, TabRec)
      end.
  
-+
 +init_table(Tab, {external_copies,Mod}, Fun, false, false, Sender) ->
 +    case catch Mod:init_table(Tab, Fun, Sender) of
 +	true ->
@@ -50,19 +48,19 @@
  init_table(Tab, disc_only_copies, Fun, false, DetsInfo,Sender) ->
      ErtsVer = erlang:system_info(version),
      case DetsInfo of
-@@ -577,7 +602,10 @@
+@@ -577,7 +600,10 @@
  	    ok;
  	false ->
  	    ok
 -    end.
 +    end;
++
 +handle_last(_Storage, _Type, nobin) ->
 +    ok.
-+
  
  down(Tab, Storage) ->
      case Storage of
-@@ -588,7 +616,9 @@
+@@ -588,7 +614,9 @@
  	disc_only_copies ->
  	    TmpFile = mnesia_lib:tab2tmp(Tab),
  	    mnesia_lib:dets_sync_close(Tab),
@@ -73,7 +71,7 @@
      end,
      mnesia_checkpoint:tm_del_copy(Tab, node()),
      mnesia_controller:sync_del_table_copy_whereabouts(Tab, node()),
-@@ -613,21 +643,27 @@
+@@ -613,21 +641,35 @@
  db_erase({disc_copies, Tab}, Key) ->
      true = ?ets_delete(Tab, Key);
  db_erase({disc_only_copies, Tab}, Key) ->
@@ -90,7 +88,15 @@
 -    ok = dets:match_delete(Tab, Pat).
 +    ok = dets:match_delete(Tab, Pat);
 +db_match_erase({{external_copies, Mod}, Tab}, Pat) ->
-+    ok = Mod:match_delete(Tab, Pat).
++    % "ets style" is to return true
++    % "dets style" is to return N | { error, Reason }
++    %   or sometimes ok (?) 
++    % be nice and accept both
++    case Mod:match_delete(Tab, Pat) of
++      N when is_integer (N) -> ok;
++      true -> ok;
++      ok -> ok
++    end.
  
  db_put({ram_copies, Tab}, Val) ->
      true = ?ets_insert(Tab, Val);
