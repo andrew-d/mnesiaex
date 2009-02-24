@@ -1,0 +1,59 @@
+--- mnesia-4.4.2/src/mnesia_controller.erl	2007-11-26 06:07:42.000000000 -0700
++++ mnesia-4.4.2ext1/src/mnesia_controller.erl	2008-07-11 19:59:04.000000000 -0600
+@@ -1,3 +1,5 @@
++%% @hidden
++
+ %% ``The contents of this file are subject to the Erlang Public License,
+ %% Version 1.1, (the "License"); you may not use this file except in
+ %% compliance with the License. You should have received a copy of the
+@@ -354,6 +356,8 @@
+ 	    do_force_load_table(Tab);
+ 	disc_only_copies ->
+ 	    do_force_load_table(Tab);
++        {external_copies, _} ->
++            do_force_load_table(Tab);        
+ 	unknown ->
+ 	    set({Tab, load_by_force}, true),
+ 	    cast({force_load_updated, Tab}),
+@@ -1473,8 +1477,12 @@
+ 	    if   %% Avoid reading from disc_only_copies
+ 		NodeST == disc_only_copies ->
+ 		    ignore;
++		NodeST == external_copies ->
++		    ignore;
+ 		ReadST == disc_only_copies ->
+ 		    mnesia_lib:set_remote_where_to_read(Tab);
++		ReadST == external_copies ->
++		    mnesia_lib:set_remote_where_to_read(Tab);
+ 		true ->
+ 		    ignore
+ 	    end,
+@@ -1523,6 +1531,7 @@
+     Ram = Cs#cstruct.ram_copies,
+     Disc = Cs#cstruct.disc_copies,
+     DiscOnly = Cs#cstruct.disc_only_copies,
++    Ext = Cs#cstruct.external_copies,
+     BetterCopies0 = mnesia_lib:remote_copy_holders(Cs) -- Downs,
+     BetterCopies = BetterCopies0 -- Ram,
+     AccessMode = Cs#cstruct.access_mode,
+@@ -1555,7 +1564,7 @@
+ 	    false;
+ 	Storage == ram_copies ->
+ 	    if
+-		Disc == [], DiscOnly == [] ->
++		Disc == [], DiscOnly == [], Ext == [] ->
+ 		    %% Nobody has copy on disc
+ 		    {true, {Tab, ram_only}};
+ 		true ->
+@@ -1787,6 +1796,11 @@
+ 			dets:info(Tab, size), 
+ 			dets:info(Tab, file_size),
+ 			"bytes on disc");
++        {external_copies, Mod} ->
++            info_format(Tab,
++                        Mod:info(Tab, size),
++                        Mod:info(Tab, memory),
++                        "words of mem");
+ 	_ ->
+ 	    info_format(Tab, 
+ 			?ets_info(Tab, size),
