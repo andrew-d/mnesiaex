@@ -3,4 +3,5 @@ TESTS = 		\
   test-sendtable
 
 EXTRA_DIST += 		\
-  ext.hrl
+  ext.hrl		\
+  test-sendtable
