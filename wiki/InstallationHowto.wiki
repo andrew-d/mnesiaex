@@ -22,14 +22,15 @@ Running {{{make check}}} is strongly suggested.
 The project is distributed as a set of patches.  At build time it tries to
 find your current version of mnesia and patch it.  If this is successful,
 then it will end up creating a version of mnesia with a version equal
-to the version you have installed plus "ext" plus the version of 
-the extensions.  For instance, right now, version 0 of the extensions 
+to the version you have installed plus ".N" where N is the version of 
+the extensions.  For instance, right now, version 6 of the extensions 
 has been released, so on a system running mnesia-4.3.5, a successful 
-build and install will install as mnesia-4.3.5ext0.
+build and install will install as mnesia-4.3.5.6.
 
 = Tested Platforms =
 
-  * Ubuntu 32 Linux (gusty) with mnesia-4.3.5 .
+  * Ubuntu 32 bit / 64 bit Linux (gusty) with mnesia-4.4.7 (Erlang R11B5).
+  * Ubuntu 32 bit / 64 bit Linux (gusty) with mnesia-4.3.5 (Erlang R12B5).
   * OS/X 10.4 i386 with mnesia-4.3.5 (installed via fink).
 
 = Footnotes =
