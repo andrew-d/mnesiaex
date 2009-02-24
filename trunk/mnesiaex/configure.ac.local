@@ -35,5 +35,4 @@ AC_SUBST([APPINSPECT])
 FW_ERLANG_ENABLE_ERLRC_DEFAULT=0
 
 AC_CONFIG_FILES([src/patches-4.3.5/Makefile 
-                 src/patches-4.4.2/Makefile
                  src/patches-4.4.7/Makefile])

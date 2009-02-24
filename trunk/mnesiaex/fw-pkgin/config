@@ -11,7 +11,7 @@ test $? = 0 || {
   exit 1 ;
 } ;
 
-VERSIONSUFFIX=".5" ;
+VERSIONSUFFIX=".6" ;
 
 FW_PACKAGE_NAME="mnesia"
 FW_PACKAGE_VERSION="${MNESIAVER}${VERSIONSUFFIX}"

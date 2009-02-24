@@ -1,6 +1,6 @@
 # put whatever (auto)make commands here, they will be included from Makefile.am
 
-SUBDIRS += patches-4.3.5 patches-4.4.2 patches-4.4.7
+SUBDIRS += patches-4.3.5 patches-4.4.7
 
 dist_erlappsrc_DATA = 					\
   mnesia_ext.erl
