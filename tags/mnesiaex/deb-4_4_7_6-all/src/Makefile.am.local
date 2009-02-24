@@ -1,0 +1,61 @@
+# put whatever (auto)make commands here, they will be included from Makefile.am
+
+SUBDIRS += patches-4.3.5 patches-4.4.7
+
+dist_erlappsrc_DATA = 					\
+  mnesia_ext.erl
+
+mnesiapatched = $(patsubst patches-$(PATCHVER)/%.erl.patch, %.erl, $(wildcard patches-$(PATCHVER)/*.erl.patch))
+mnesiaraw = $(filter-out $(mnesiapatched), $(patsubst $(MNESIALOC)/%.erl, %.erl, $(wildcard $(MNESIALOC)/*.erl)))
+
+# mnesia puts mnesia.hrl into src, not include, so we do that too
+
+erlappsrc_DATA =						\
+  mnesia.hrl							\
+  $(mnesiaraw)							\
+  $(mnesiapatched)
+
+dist_erlappinclude_DATA =
+
+erlappebin_SCRIPTS =					\
+  @FW_PACKAGE_NAME@.app					\
+  $(patsubst %.erl, %.beam, $(mnesiaraw) $(mnesiapatched) $(dist_erlappsrc_DATA))
+
+dist_erlapppriv_DATA =		\
+  $(wildcard *.patch)
+
+# TODO: With the new r12 dialyzer, I'm having problems
+# suppressing the no return warnings (?)
+#check_DATA =			\
+#  .dialyzer_ok
+
+# due to the tricks i'm playing, this is not getting made correctly
+# the first time, so here's a band-aid.
+
+noinst_DATA =			\
+  .force_make_app_file
+
+.force_make_app_file:  $(dist_erlappsrc_DATA) $(erlappsrc_DATA)
+	@rm @FW_PACKAGE_NAME@.app
+	@make @FW_PACKAGE_NAME@.app && touch $@
+
+%.erl: patches-$(PATCHVER)/%.erl.patch 
+	@cp @MNESIALOC@/$*.erl .
+	@patch $*.erl patches-$(PATCHVER)/$*.erl.patch
+
+%.hrl: patches-$(PATCHVER)/%.hrl.patch 
+	@cp @MNESIALOC@/$*.hrl .
+	@patch $*.hrl patches-$(PATCHVER)/$*.hrl.patch
+
+%.erl: @MNESIALOC@/%.erl
+	@cp @MNESIALOC@/$*.erl .
+	@perl -i -pe 'print "%% \@hidden\n" unless $$i++;' $*.erl
+
+CLEANFILES +=			\
+  $(erlappinclude_DATA)		\
+  $(erlappsrc_DATA)		\
+  .force_make_app_file
+
+mnesia_ext.erl: mnesia.hrl
+
+DIALYZERFLAGS += -Wno_return -Wno_improper_lists
