@@ -13,61 +13,71 @@
          init_index/2, fixtable/2, init_table/3
          ]).
 
+unmangle(Mangled) ->
+  case atom_to_list(Mangled) of
+    "_hide_me_" ++ T -> list_to_atom (T)
+  end.
+
+mangle(Tab) ->
+  list_to_atom("_hide_me_" ++ atom_to_list(Tab)).
+
+info(Tab, name) ->
+     unmangle(ets:info(mangle(Tab), name));
 info(Tab, Item) ->
-     ets:info(Tab, Item).
+     ets:info(mangle(Tab), Item).
 
 lookup(Tab, Key) ->
-    ets:lookup(Tab, Key).
+    ets:lookup(mangle(Tab), Key).
 
 insert(Tab, Val) ->
-    ets:insert(Tab, Val).
+    ets:insert(mangle(Tab), Val).
 
 match_object(Tab, Pat) ->
-    ets:match_object(Tab, Pat).
+    ets:match_object(mangle(Tab), Pat).
 
 select(Tab, Pat) ->
-    ets:select(Tab, Pat).
+    ts:select(mangle(Tab), Pat).
 
 select(Cont) ->
     ets:select(Cont).
 
 select(Tab, Pat, Limit) ->
-    ets:select(Tab, Pat, Limit).
+    ets:select(mangle(Tab), Pat, Limit).
 
 fixtable(Tab, Bool) ->
-    ets:safe_fixtable(Tab, Bool).
+    ets:safe_fixtable(mangle(Tab), Bool).
 
 delete(Tab, Key) ->
-    ets:delete(Tab, Key).
+    ets:delete(mangle(Tab), Key).
 
 match_delete(Tab, Pat) ->
-    ets:match_delete(Tab, Pat).
+    ets:match_delete(mangle(Tab), Pat).
 
 first(Tab) ->
-    ets:first(Tab).
+    ets:first(mangle(Tab)).
 
 next(Tab, Key) ->
-    ets:next(Tab, Key).
+    ets:next(mangle(Tab), Key).
 
 last(Tab) ->
-    ets:last(Tab).
+    ets:last(mangle(Tab)).
 
 prev(Tab, Key) ->
-    ets:prev(Tab, Key).
+    ets:prev(mangle(Tab), Key).
 
 slot(Tab, Pos) ->
-    ets:slot(Tab, Pos).
+    ets:slot(mangle(Tab), Pos).
 
 update_counter(Tab, C, Val) ->
-    ets:update_counter(Tab, C, Val).
+    ets:update_counter(mangle(Tab), C, Val).
 
 create_table(Tab, Cs) ->
     { _, Type, _ } = Cs#cstruct.type,
     Args = [{keypos, 2}, public, named_table, Type],
-    ets:new(Tab, Args).
+    unmangle(ets:new(mangle(Tab), Args)).
 
 delete_table(Tab) ->
-    ets:delete(Tab).
+    ets:delete(mangle(Tab)).
 
 add_index(_Tab, _Pos) ->
     ok.
@@ -79,4 +89,4 @@ init_index(_Tab, _Pos) ->
     ok.
 
 init_table(Tab, InitFun, _Sender) ->
-    ets:init_table (Tab, InitFun).
+    ets:init_table(mangle(Tab), InitFun).

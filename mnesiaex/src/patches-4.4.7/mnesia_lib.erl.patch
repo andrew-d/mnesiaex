@@ -32,7 +32,7 @@
      Cs#cstruct.disc_only_copies ++
      Cs#cstruct.disc_copies ++
      Cs#cstruct.ram_copies.
-@@ -1012,18 +1022,32 @@
+@@ -1012,18 +1022,30 @@
      db_get(val({Tab, storage_type}), Tab, Key).
  db_get(ram_copies, Tab, Key) -> ?ets_lookup(Tab, Key);
  db_get(disc_copies, Tab, Key) -> ?ets_lookup(Tab, Key);
@@ -59,14 +59,12 @@
  db_init_chunk(_, Tab, N) ->
      ets:select(Tab, [{'_', [], ['$_']}], N).
  
-+db_chunk(external_copies, {Mod, State}) ->
-+    db_chunk({external_copies, Mod}, State);
-+db_chunk({external_copies, Mod}, {_, State}) ->
++db_chunk({external_copies, Mod}, State) ->
 +    Mod:select(State);
  db_chunk(disc_only_copies, State) ->
      dets:select(State);
  db_chunk(_, State) ->
-@@ -1034,7 +1058,12 @@
+@@ -1034,7 +1056,12 @@
  
  db_put(ram_copies, Tab, Val) -> ?ets_insert(Tab, Val), ok;
  db_put(disc_copies, Tab, Val) -> ?ets_insert(Tab, Val), ok;
@@ -80,7 +78,7 @@
  
  db_match_object(Tab, Pat) ->
      db_match_object(val({Tab, storage_type}), Tab, Pat).
-@@ -1047,6 +1076,11 @@
+@@ -1047,6 +1074,11 @@
  	_ -> Res
      end.
  
@@ -92,7 +90,7 @@
  catch_match_object(disc_only_copies, Tab, Pat) ->
      catch dets:match_object(Tab, Pat);
  catch_match_object(_, Tab, Pat) ->
-@@ -1064,16 +1098,38 @@
+@@ -1064,16 +1096,38 @@
  	_ -> Res
      end.
  
@@ -131,7 +129,7 @@
  db_select_cont(disc_only_copies, Cont0, Ms) ->
      Cont = dets:repair_continuation(Cont0, Ms),
      dets:select(Cont);
-@@ -1090,49 +1146,91 @@
+@@ -1090,49 +1144,91 @@
  db_fixtable(dets, Tab, Bool) ->
      dets:safe_fixtable(Tab, Bool);
  db_fixtable(disc_only_copies, Tab, Bool) ->
@@ -231,7 +229,7 @@
  
  db_update_counter(Tab, C, Val) ->
      db_update_counter(val({Tab, storage_type}), Tab, C, Val).
-@@ -1141,13 +1239,23 @@
+@@ -1141,13 +1237,23 @@
  db_update_counter(disc_copies, Tab, C, Val) ->
      ?ets_update_counter(Tab, C, Val);
  db_update_counter(disc_only_copies, Tab, C, Val) ->
