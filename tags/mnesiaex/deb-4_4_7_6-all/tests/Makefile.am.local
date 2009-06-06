@@ -1,7 +1,0 @@
-TESTS = 		\
-  module-ext		\
-  test-sendtable
-
-EXTRA_DIST += 		\
-  ext.hrl		\
-  test-sendtable

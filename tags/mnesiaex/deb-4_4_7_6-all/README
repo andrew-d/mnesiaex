@@ -1,1 +1,0 @@
-Storage API for Mnesia.  Extends Mnesia to use arbitrary table implementations.
