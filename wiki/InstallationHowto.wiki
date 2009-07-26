@@ -3,6 +3,8 @@
 
 = Prerequisites =
 
+Do NOT attempt to build from a checkout from the source code repository: that is for wizards only.  Instead, grab one of the released source tarballs from the [http://code.google.com/p/mnesiaex/downloads/list downloads] tab.
+
   1. gnu make
   1. working erlang installation.
      * debian: aptitude install erlang-dev
